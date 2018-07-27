@@ -20,9 +20,7 @@
 (defn new-story-listener []
   (go-loop [] (let [story  (<! new-story-channel)] 
     (add-story story)
-    (recur)))
-
-(new-story-listener)
+    (recur))))
 
 (defn load-stories []
     (api/get-top-stories new-story-channel))
@@ -30,14 +28,13 @@
 (load-stories)
 
 (defn home-page []
-  [:div [:h2 "Welcome to hn-reagent"]
+  :component-did-mount  load-stories
+   :reagent-render [:div.container [:h2 "Welcome to hn-reagent"]
    [story/story-list (:stories @app-state)]])
 
 (defn about-page []
   [:div [:h2 "About hn-reagent"]
    [:div [:a {:href "/"} "go to the home page"]]])
-
-  ; (api/get-top-stories)
 
 ;; -------------------------
 ;; Routes
@@ -68,4 +65,5 @@
      (fn [path]
        (secretary/locate-route path))})
   (accountant/dispatch-current!)
-  (mount-root))
+  (mount-root)
+  (new-story-listener))

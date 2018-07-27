@@ -2,14 +2,14 @@
     (:require [reagent.core :as r]))
 
 (defn story-item [story]
-    [:div
+    [:li.list-group-item
         [:a.title {:href (:url story)}   (:title story)]
-        [:span (:by story)]
-        [:span (:score story)] ]
+        [:div
+        [:span (:score story)] (str " points by ") [:span (:by story)]] ]
     )
 
 (defn story-list [stories]
-    [:div
+    [:ul.list-group
         (for [story (sort-by :score > stories)]
             ^{:key (:id story)} [story-item story])
         ]
